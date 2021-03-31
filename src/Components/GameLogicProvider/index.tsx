@@ -86,8 +86,13 @@ const GameLogicProvider = ({ children }: ContextProps) => {
       if (iIndex < 0 || jIndex < 0 || iIndex > size - 1 || jIndex > size - 1) {
         // console.log("<0 or > size");
         return;
-      } else if (LogicArray[iIndex][jIndex] !== 0) {
+      } else if (
+        LogicArray[iIndex][jIndex] > 0 &&
+        LogicArray[iIndex][jIndex] < 20
+      ) {
         // console.log("val not 0");
+        setCellClicked(iIndex, jIndex);
+        state[iIndex + "," + jIndex] = true;
         return;
       } else if (state[iIndex + "," + jIndex]) {
         // console.log("cell already selected");
