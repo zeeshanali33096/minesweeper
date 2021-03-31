@@ -70,6 +70,10 @@ const GameLogicProvider = ({ children }: ContextProps) => {
       } else {
         setCellClicked(iIndex, jIndex);
         if (LogicArray[iIndex][jIndex] > 20) {
+          const newClicked = Clicked.map((r, rId) =>
+            r.map((c, cId) => (LogicArray[rId][cId] > 20 ? true : c))
+          );
+          setClicked(newClicked);
           setGameState(3);
         }
       }
@@ -79,83 +83,81 @@ const GameLogicProvider = ({ children }: ContextProps) => {
   const handleBlankCellClicked = (
     iIndex: number,
     jIndex: number,
-    state: any,
+    state: any
   ) => {
-    setTimeout(() => {
-      console.log({ iIndex, jIndex });
-      if (iIndex < 0 || jIndex < 0 || iIndex > size - 1 || jIndex > size - 1) {
-        // console.log("<0 or > size");
-        return;
-      } else if (
-        LogicArray[iIndex][jIndex] > 0 &&
-        LogicArray[iIndex][jIndex] < 20
-      ) {
-        // console.log("val not 0");
-        setCellClicked(iIndex, jIndex);
-        state[iIndex + "," + jIndex] = true;
-        return;
-      } else if (state[iIndex + "," + jIndex]) {
-        // console.log("cell already selected");
-        return;
-      } else {
-        setCellClicked(iIndex, jIndex);
-        state[iIndex + "," + jIndex] = true;
-        // console.log("cell not selected", iIndex, jIndex);
-        if (iIndex - 1 >= 0) {
-          if (state[iIndex - 1 + "," + jIndex]) {
-          } else {
-            handleBlankCellClicked(iIndex - 1, jIndex, state); // top
-          }
-        }
-        if (iIndex - 1 >= 0 && jIndex + 1 <= size - 1) {
-          if (state[iIndex - 1 + "," + (jIndex + 1)]) {
-          } else {
-            handleBlankCellClicked(iIndex - 1, jIndex + 1, state); //top right
-          }
-        }
-        if (jIndex + 1 <= size - 1) {
-          if (state[iIndex + "," + (jIndex + 1)]) {
-          } else {
-            handleBlankCellClicked(iIndex, jIndex + 1, state); // right
-          }
-        }
-
-        if (iIndex + 1 <= size - 1 && jIndex + 1 <= size - 1) {
-          if (state[iIndex + 1 + "," + (jIndex + 1)]) {
-          } else {
-            handleBlankCellClicked(iIndex + 1, jIndex + 1, state); //bottom right
-          }
-        }
-
-        if (iIndex + 1 <= size - 1) {
-          if (state[iIndex + 1 + "," + jIndex]) {
-          } else {
-            handleBlankCellClicked(iIndex + 1, jIndex, state); //bottom
-          }
-        }
-
-        if (iIndex + 1 <= size - 1 && jIndex - 1 >= 0) {
-          if (state[iIndex + 1 + "," + (jIndex - 1)]) {
-          } else {
-            handleBlankCellClicked(iIndex + 1, jIndex - 1, state); //bottom left
-          }
-        }
-
-        if (jIndex - 1 >= 0) {
-          if (state[iIndex + "," + (jIndex - 1)]) {
-          } else {
-            handleBlankCellClicked(iIndex, jIndex - 1, state); // left
-          }
-        }
-
-        if (iIndex - 1 >= 0 && jIndex - 1 >= 0) {
-          if (state[iIndex - 1 + "," + (jIndex - 1)]) {
-          } else {
-            handleBlankCellClicked(iIndex - 1, jIndex - 1, state); //top left
-          }
+    console.log({ iIndex, jIndex });
+    if (iIndex < 0 || jIndex < 0 || iIndex > size - 1 || jIndex > size - 1) {
+      // console.log("<0 or > size");
+      return;
+    } else if (
+      LogicArray[iIndex][jIndex] > 0 &&
+      LogicArray[iIndex][jIndex] < 20
+    ) {
+      // console.log("val not 0");
+      setCellClicked(iIndex, jIndex);
+      state[iIndex + "," + jIndex] = true;
+      return;
+    } else if (state[iIndex + "," + jIndex]) {
+      // console.log("cell already selected");
+      return;
+    } else {
+      setCellClicked(iIndex, jIndex);
+      state[iIndex + "," + jIndex] = true;
+      // console.log("cell not selected", iIndex, jIndex);
+      if (iIndex - 1 >= 0) {
+        if (state[iIndex - 1 + "," + jIndex]) {
+        } else {
+          handleBlankCellClicked(iIndex - 1, jIndex, state); // top
         }
       }
-    }, 1);
+      if (iIndex - 1 >= 0 && jIndex + 1 <= size - 1) {
+        if (state[iIndex - 1 + "," + (jIndex + 1)]) {
+        } else {
+          handleBlankCellClicked(iIndex - 1, jIndex + 1, state); //top right
+        }
+      }
+      if (jIndex + 1 <= size - 1) {
+        if (state[iIndex + "," + (jIndex + 1)]) {
+        } else {
+          handleBlankCellClicked(iIndex, jIndex + 1, state); // right
+        }
+      }
+
+      if (iIndex + 1 <= size - 1 && jIndex + 1 <= size - 1) {
+        if (state[iIndex + 1 + "," + (jIndex + 1)]) {
+        } else {
+          handleBlankCellClicked(iIndex + 1, jIndex + 1, state); //bottom right
+        }
+      }
+
+      if (iIndex + 1 <= size - 1) {
+        if (state[iIndex + 1 + "," + jIndex]) {
+        } else {
+          handleBlankCellClicked(iIndex + 1, jIndex, state); //bottom
+        }
+      }
+
+      if (iIndex + 1 <= size - 1 && jIndex - 1 >= 0) {
+        if (state[iIndex + 1 + "," + (jIndex - 1)]) {
+        } else {
+          handleBlankCellClicked(iIndex + 1, jIndex - 1, state); //bottom left
+        }
+      }
+
+      if (jIndex - 1 >= 0) {
+        if (state[iIndex + "," + (jIndex - 1)]) {
+        } else {
+          handleBlankCellClicked(iIndex, jIndex - 1, state); // left
+        }
+      }
+
+      if (iIndex - 1 >= 0 && jIndex - 1 >= 0) {
+        if (state[iIndex - 1 + "," + (jIndex - 1)]) {
+        } else {
+          handleBlankCellClicked(iIndex - 1, jIndex - 1, state); //top left
+        }
+      }
+    }
   };
   return (
     <GameLogicContext.Provider
