@@ -29,7 +29,7 @@ const Cell = ({ val, iIndex, jIndex, show }: Props) => {
 };
 
 const CellText = (val: number) => (
-  <Heading cursor="none" textAlign="center" color="black">
+  <Heading pointerEvents="none" textAlign="center" color="black">
     {val === 0 ? "" : val > 20 ? "X" : val}
   </Heading>
 );
