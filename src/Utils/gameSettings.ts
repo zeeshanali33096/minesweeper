@@ -1,8 +1,8 @@
 export const allowedDifficulty = {
-    "Easiest": 49,
-    "Easy": 13,
-    "Normal": 12,
-    "Hard": 6,
+    "Easiest": 9,
+    "Easy": 8,
+    "Normal": 6,
+    "Hard": 4,
     "Very Hard": 3,
     "Insane": 2
 };

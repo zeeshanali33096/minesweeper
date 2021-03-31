@@ -10,7 +10,7 @@ import {
 //game state : 0 - not started , 1 - running , 2 - win, 3 over
 const initialState = {
   size: 12,
-  difficulty: "Easy",
+  difficulty: "Normal",
   gameState: 0,
   setSize: (size: number) => {},
   setDifficulty: (difficulty: string) => {},
@@ -21,7 +21,7 @@ export  const GameSettingsContext = React.createContext(initialState);
 
 const GameSettingsProvider = ({ children }: ContextProps) => {
   const [size, setSize] = React.useState<number>(12);
-  const [difficulty, setDifficulty] = React.useState<string>("Easy");
+  const [difficulty, setDifficulty] = React.useState<string>("Normal");
   const [gameState, setGameState] = React.useState<number>(0);
 
   React.useEffect(() => {
@@ -32,7 +32,7 @@ const GameSettingsProvider = ({ children }: ContextProps) => {
 
   React.useEffect(() => {
     if (Object.keys(allowedDifficulty).indexOf(difficulty) === -1) {
-      setDifficulty("Easy");
+      setDifficulty("Normal");
     }
   }, [difficulty]);
 

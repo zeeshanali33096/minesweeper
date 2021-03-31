@@ -79,7 +79,7 @@ const GameLogicProvider = ({ children }: ContextProps) => {
   const handleBlankCellClicked = (
     iIndex: number,
     jIndex: number,
-    state: any
+    state: any,
   ) => {
     setTimeout(() => {
       console.log({ iIndex, jIndex });
