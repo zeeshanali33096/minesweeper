@@ -7,8 +7,9 @@ interface Props {
   iIndex: number;
   jIndex: number;
   show: boolean;
+  marker: boolean;
 }
-const Cell = ({ val, iIndex, jIndex, show }: Props) => {
+const Cell = ({ val, iIndex, jIndex, show, marker }: Props) => {
   const { setClickedShow } = React.useContext(GameLogicContext);
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -23,14 +24,25 @@ const Cell = ({ val, iIndex, jIndex, show }: Props) => {
       border="1px solid black"
       key={`${val}-${iIndex}-${jIndex}`}
     >
-      {show ? CellText(val) : ""}
+      {show ? CellText(val) : marker ? CellTextMarked() : ""}
     </Box>
   );
 };
 
 const CellText = (val: number) => (
-  <Heading pointerEvents="none" textAlign="center" color="black">
+  <Heading
+    fontSize="25px"
+    pointerEvents="none"
+    textAlign="center"
+    color="black"
+  >
     {val === 0 ? "" : val > 20 ? "X" : val}
+  </Heading>
+);
+
+const CellTextMarked = () => (
+  <Heading fontSize="25px" pointerEvents="none" textAlign="center" color="red">
+    !
   </Heading>
 );
 

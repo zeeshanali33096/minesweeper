@@ -13,6 +13,10 @@ import { GameSettingsContext } from "../GameSettingsProvider";
 const initialState = {
   ...generateMines(12),
   setClickedShow: (iIndex: number, jIndex: number) => {},
+  markerSelected: false,
+  setMarkerSelected: (val: boolean) => {},
+  markerArray: generateNewClickedArray(12),
+  // setMarkerArray: (newMarkerArray)=> {}
 };
 
 export const GameLogicContext = React.createContext(initialState);
@@ -32,6 +36,12 @@ const GameLogicProvider = ({ children }: ContextProps) => {
     (c, v) => c + v.reduce((sum, cv) => (cv > 20 ? sum + 1 : sum), 0),
     0
   );
+
+  const [markerArray, setMarkerArray] = React.useState<boolean[][]>(
+    generateNewClickedArray(size)
+  );
+
+  const [markerSelected, setMarkerSelected] = React.useState<boolean>(false);
 
   const [total, setTotal] = React.useState<number>(0);
 
@@ -65,16 +75,26 @@ const GameLogicProvider = ({ children }: ContextProps) => {
 
   const setClickedShow = (iIndex: number, jIndex: number) => {
     if (gameState === 1) {
-      if (LogicArray[iIndex][jIndex] === 0) {
-        handleBlankCellClicked(iIndex, jIndex, {});
+      if (markerSelected) {
+        setMarkerArray(
+          markerArray.map((r, rId) =>
+            r.map((c, cId) =>
+              rId === iIndex && cId === jIndex ? (c === true ? false : true) : c
+            )
+          )
+        );
       } else {
-        setCellClicked(iIndex, jIndex);
-        if (LogicArray[iIndex][jIndex] > 20) {
-          const newClicked = Clicked.map((r, rId) =>
-            r.map((c, cId) => (LogicArray[rId][cId] > 20 ? true : c))
-          );
-          setClicked(newClicked);
-          setGameState(3);
+        if (LogicArray[iIndex][jIndex] === 0) {
+          handleBlankCellClicked(iIndex, jIndex, {});
+        } else {
+          setCellClicked(iIndex, jIndex);
+          if (LogicArray[iIndex][jIndex] > 20) {
+            const newClicked = Clicked.map((r, rId) =>
+              r.map((c, cId) => (LogicArray[rId][cId] > 20 ? true : c))
+            );
+            setClicked(newClicked);
+            setGameState(3);
+          }
         }
       }
     }
@@ -162,9 +182,12 @@ const GameLogicProvider = ({ children }: ContextProps) => {
   return (
     <GameLogicContext.Provider
       value={{
+        markerArray,
         clickedArr: Clicked,
         logicArray: LogicArray,
         setClickedShow,
+        markerSelected,
+        setMarkerSelected,
       }}
     >
       {gameState === 0 ? <Redirect to="/" /> : children}

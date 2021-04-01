@@ -15,9 +15,16 @@ import { useHistory } from "react-router";
 import Cell from "../../Components/Cell";
 import { GameLogicContext } from "../../Components/GameLogicProvider";
 import { GameSettingsContext } from "../../Components/GameSettingsProvider";
+import MineMarkerSelector from "../../Components/MineMarkerSelector";
 
 const GamePage = () => {
-  const { logicArray, clickedArr } = React.useContext(GameLogicContext);
+  const {
+    logicArray,
+    clickedArr,
+    setMarkerSelected,
+    markerSelected,
+    markerArray
+  } = React.useContext(GameLogicContext);
   const { size, gameState } = React.useContext(GameSettingsContext);
   const [isOpen, setIsOpen] = React.useState<boolean>(false);
   const history = useHistory();
@@ -33,21 +40,29 @@ const GamePage = () => {
   const onClose = () => {
     setIsOpen(false);
   };
+
   return (
     <Flex
       marginTop="2em"
       alignItems="center"
-      justifyContent="center"
+      // justifyContent="center"
       width="100%"
+      height="100vh"
+      direction="column"
+      onClick={() => (markerSelected ? setMarkerSelected(false) : {})}
     >
+      <Flex id="minemarker_selector" marginTop="1em" marginBottom="1em">
+        <MineMarkerSelector selected />
+      </Flex>
       <Grid
-        height={size * 50}
-        width={size * 50}
+        id="game_area"
+        height={size * 35}
+        width={size * 35}
         templateColumns={`repeat(${size}, 1fr)`}
         templateRows={`repeat(${size}, 1fr)`}
       >
         {logicArray.map((i, index) => {
-          return printRow(i, clickedArr[index], index);
+          return printRow(i, clickedArr[index], index, markerArray[index]);
         })}
       </Grid>
       <Modal isOpen={isOpen} onClose={onClose}>
@@ -62,7 +77,7 @@ const GamePage = () => {
   );
 };
 
-const printRow = (i: number[], selectedArr: boolean[], iIndex: number) => {
+const printRow = (i: number[], selectedArr: boolean[], iIndex: number, markerRow: boolean[]) => {
   return i.map((j, index) => {
     return (
       <Cell
@@ -71,6 +86,7 @@ const printRow = (i: number[], selectedArr: boolean[], iIndex: number) => {
         iIndex={iIndex}
         jIndex={index}
         show={selectedArr[index]}
+        marker={markerRow[index]}
       />
     );
   });
