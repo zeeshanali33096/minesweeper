@@ -11,7 +11,7 @@ const HomePage = () => {
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     settings.setGameState(1);
-    history.replace("/game");
+    history.push("/game");
   };
   return (
     <Flex

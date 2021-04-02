@@ -7,26 +7,24 @@ export const generateMines = (size: number) => {
 export const generateMinesLogicArray = (size: number, difficulty: number) => {
   const arr = new Array(size)
     .fill(0)
-    .map((val, index) =>
+    .map(() =>
       new Array(size)
         .fill(0)
-        .map((subArrVal, subArrIndex) =>
-          Math.round(Math.random() * Math.pow(10, 10)) % difficulty === 0 ? 1 : 0
+        .map(() =>
+          Math.round(Math.random() * Math.pow(10, 10)) % difficulty === 0
+            ? 1
+            : 0
         )
     );
   return generateMinesLogic(size, arr);
 };
 
 export const generateNewClickedArray = (size: number) =>
-  new Array(size)
-    .fill(0)
-    .map((val, index) =>
-      new Array(size).fill(0).map((subArrVal, subArrIndex) => false)
-    );
+  new Array(size).fill(0).map(() => new Array(size).fill(0).map(() => false));
 
 const generateMinesLogic = (size: number, arr: number[][]) => {
-  let newArr = new Array(size).fill(0).map((val, index) => {
-    const subArr = new Array(size).fill(0).map((subArrVal, subArrIndex) => 0);
+  let newArr = new Array(size).fill(0).map(() => {
+    const subArr = new Array(size).fill(0).map(() => 0);
     return subArr;
   });
   for (let i = 0; i < size; i++) {

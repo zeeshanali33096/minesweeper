@@ -1,4 +1,4 @@
-import { Flex, Grid } from "@chakra-ui/layout";
+import { Flex, Grid, Heading } from "@chakra-ui/layout";
 import {
   Box,
   Button,
@@ -16,6 +16,8 @@ import Cell from "../../Components/Cell";
 import { GameLogicContext } from "../../Components/GameLogicProvider";
 import { GameSettingsContext } from "../../Components/GameSettingsProvider";
 import MineMarkerSelector from "../../Components/MineMarkerSelector";
+import ResetGame from "../../Components/ResetGame";
+import gameSettings from "../../Utils/gameSettings";
 
 const GamePage = () => {
   const {
@@ -23,9 +25,10 @@ const GamePage = () => {
     clickedArr,
     setMarkerSelected,
     markerSelected,
-    markerArray
+    markerArray,
+    flashHint,
   } = React.useContext(GameLogicContext);
-  const { size, gameState } = React.useContext(GameSettingsContext);
+  const { size, gameState, difficulty } = React.useContext(GameSettingsContext);
   const [isOpen, setIsOpen] = React.useState<boolean>(false);
   const history = useHistory();
 
@@ -41,6 +44,17 @@ const GamePage = () => {
     setIsOpen(false);
   };
 
+  React.useEffect(() => {
+    if (
+      difficulty === "Normal" ||
+      difficulty === "Hard" ||
+      difficulty === "Very Hard" ||
+      difficulty === "Insane"
+    ) {
+      flashHint();
+    }
+  }, []);
+
   return (
     <Flex
       marginTop="2em"
@@ -53,6 +67,7 @@ const GamePage = () => {
     >
       <Flex id="minemarker_selector" marginTop="1em" marginBottom="1em">
         <MineMarkerSelector selected />
+        {/* <ResetGame /> */}
       </Flex>
       <Grid
         id="game_area"
@@ -65,6 +80,11 @@ const GamePage = () => {
           return printRow(i, clickedArr[index], index, markerArray[index]);
         })}
       </Grid>
+      <Heading
+        fontSize="16px"
+        marginTop="1em"
+        color="white"
+      >{`Difficulty ${difficulty}`}</Heading>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
@@ -77,7 +97,12 @@ const GamePage = () => {
   );
 };
 
-const printRow = (i: number[], selectedArr: boolean[], iIndex: number, markerRow: boolean[]) => {
+const printRow = (
+  i: number[],
+  selectedArr: boolean[],
+  iIndex: number,
+  markerRow: boolean[]
+) => {
   return i.map((j, index) => {
     return (
       <Cell

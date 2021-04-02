@@ -1,4 +1,3 @@
-import { settings } from "node:cluster";
 import React from "react";
 import { Redirect } from "react-router";
 import { ContextProps } from "../../Utils/ContextProps";
@@ -16,6 +15,8 @@ const initialState = {
   markerSelected: false,
   setMarkerSelected: (val: boolean) => {},
   markerArray: generateNewClickedArray(12),
+  flashHint: () => {},
+  resetGame: () => {},
   // setMarkerArray: (newMarkerArray)=> {}
 };
 
@@ -32,9 +33,11 @@ const GameLogicProvider = ({ children }: ContextProps) => {
     generateMinesLogicArray(size, (allowedDifficulty as any)[difficulty])
   );
 
-  const minesCount = LogicArray.reduce(
-    (c, v) => c + v.reduce((sum, cv) => (cv > 20 ? sum + 1 : sum), 0),
-    0
+  const [minesCount, setMinesCount] = React.useState<number>(
+    LogicArray.reduce(
+      (c, v) => c + v.reduce((sum, cv) => (cv > 20 ? sum + 1 : sum), 0),
+      0
+    )
   );
 
   const [markerArray, setMarkerArray] = React.useState<boolean[][]>(
@@ -44,6 +47,51 @@ const GameLogicProvider = ({ children }: ContextProps) => {
   const [markerSelected, setMarkerSelected] = React.useState<boolean>(false);
 
   const [total, setTotal] = React.useState<number>(0);
+
+  const resetShown = () => setClicked(generateNewClickedArray(size));
+
+  const showBlanks = () =>
+    setClicked(LogicArray.map((r) => r.map((c) => (c === 0 ? true : false))));
+
+  const resetAfterTimeout = () => {
+    setTimeout(() => {
+      resetShown();
+    }, 400);
+  };
+
+  const resetGame = () => {
+    setLogicArray(
+      generateMinesLogicArray(size, (allowedDifficulty as any)[difficulty])
+    );
+    setMarkerArray(generateNewClickedArray(size));
+    setClicked(generateNewClickedArray(size));
+
+    setTimeout(() => {
+      flashHint();
+    }, 500);
+  };
+
+  React.useEffect(() => {
+    setMinesCount(
+      LogicArray.reduce(
+        (c, v) => c + v.reduce((sum, cv) => (cv > 20 ? sum + 1 : sum), 0),
+        0
+      )
+    );
+  }, [LogicArray]);
+
+  const flashHint = () => {
+    if (
+      Clicked.reduce(
+        (t, r) => t + r.reduce((s, c) => (c === true ? s + 1 : s), 0),
+        0
+      ) === 0
+    )
+      setTimeout(() => {
+        showBlanks();
+        resetAfterTimeout();
+      }, 500);
+  };
 
   React.useEffect(() => {
     setTimeout(() => {
@@ -188,6 +236,8 @@ const GameLogicProvider = ({ children }: ContextProps) => {
         setClickedShow,
         markerSelected,
         setMarkerSelected,
+        flashHint,
+        resetGame,
       }}
     >
       {gameState === 0 ? <Redirect to="/" /> : children}
